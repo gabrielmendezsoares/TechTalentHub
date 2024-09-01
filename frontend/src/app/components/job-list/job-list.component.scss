@@ -1,0 +1,40 @@
+.job-list-container {
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.job-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.job-item {
+  padding: 16px;
+  margin-bottom: 16px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.25em;
+  }
+
+  p {
+    margin: 0 0 16px 0;
+    color: #666;
+  }
+
+  button {
+    display: inline-block;
+    margin-top: 8px;
+  }
+}

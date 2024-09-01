@@ -1,0 +1,18 @@
+<div>
+  <h2>Criar Nova Vaga</h2>
+  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+    <label for="title">Título</label>
+    <input id="title" formControlName="title">
+    <div *ngIf="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
+      Título é obrigatório.
+    </div>
+
+    <label for="description">Descrição</label>
+    <textarea id="description" formControlName="description"></textarea>
+    <div *ngIf="jobForm.get('description')?.invalid && jobForm.get('description')?.touched">
+      Descrição é obrigatória.
+    </div>
+
+    <button type="submit" [disabled]="jobForm.invalid">Criar</button>
+  </form>
+</div>
