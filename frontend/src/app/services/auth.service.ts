@@ -1,34 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs'; // Adicione 'of' aqui
-import { catchError, map, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-
-interface User {
-  id: number;
-  username: string;
-  role: string;
-}
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, tap, map } from 'rxjs/operators'; // Importar a função map do RxJS
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'http://localhost:3000/aut';
   private userSubject = new BehaviorSubject<User | null>(null);
-  public user$ = this.userSubject.asObservable();
-  public isAuthenticated$ = this.user$.pipe(map(user => !!user));
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.loadUser();
-  }
-
-  private loadUser(): void {
-    const token = this.getToken();
-    if (token) {
-      this.fetchUser().subscribe();
-    }
-  }
+  constructor(private http: HttpClient, private router: Router) { }
 
   private fetchUser(): Observable<User | null> {
     return this.http.get<User>(`${this.apiUrl}/me`).pipe(
@@ -42,32 +26,43 @@ export class AuthService {
 
   login(credentials: { username: string, password: string; }): Observable<boolean> {
     return this.http.post<{ token: string; }>(`${this.apiUrl}/login`, credentials).pipe(
-      tap(response => {
-        if (response.token) {
-          localStorage.setItem('token', response.token);
-          this.fetchUser().subscribe();
-        }
-      }),
+      tap(response => this.handleLoginResponse(response)),
       map(response => !!response.token),
       catchError(() => of(false))
     );
   }
 
+  private handleLoginResponse(response: { token: string; }): void {
+    if (response.token) {
+      this.storeToken(response.token);
+      this.fetchUser().subscribe();
+    }
+  }
+
+  private storeToken(token: string): void {
+    localStorage.setItem('token', token);
+  }
+
   logout(): void {
-    localStorage.removeItem('token');
+    this.clearToken();
     this.userSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  private clearToken(): void {
+    localStorage.removeItem('token');
   }
 
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  isAuthenticated(): boolean {
-    return !!this.getToken();
+  isAuthenticated(): Observable<boolean> {
+    const token = this.getToken();
+    return of(!!token);
   }
 
-  getCurrentUser(): User | null {
-    return this.userSubject.value;
+  getCurrentUser(): Observable<User | null> {
+    return this.userSubject.asObservable();
   }
 }
