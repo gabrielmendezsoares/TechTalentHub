@@ -1,10 +1,9 @@
 <div class="job-list-container">
-  <h2>Lista de Vagas</h2>
-  <ul class="job-list">
-    <li class="job-item" *ngFor="let job of jobs">
-      <h3>{{ job.title }}</h3>
-      <p>{{ job.description }}</p>
-      <button mat-button color="primary" (click)="viewJob(job.id)">Ver Detalhes</button>
-    </li>
-  </ul>
+  <div *ngFor="let job of jobs" class="job-item">
+    <h3>{{ job.title }}</h3>
+    <p>{{ job.description }}</p>
+    <button (click)="viewJob(job.id)">Ver Detalhes</button>
+    <button (click)="updateJob(job.id)">Atualizar</button>
+    <button (click)="deleteJob(job.id)">Deletar</button>
+  </div>
 </div>

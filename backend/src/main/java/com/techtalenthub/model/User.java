@@ -1,14 +1,15 @@
 package com.techtalenthub.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "app_user")
 public class User {
 
   @Id
@@ -16,15 +17,24 @@ public class User {
   private Long id;
 
   @Column(nullable = false, unique = true)
+  @NotNull(message = "O email não pode ser nulo")
+  @Email(message = "Email inválido")
+  @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$", message = "Formato de email inválido")
   private String email;
 
   @Column(nullable = false)
+  @NotNull(message = "A senha não pode ser nula")
+  @Size(min = 6, max = 20, message = "A senha deve ter entre 6 e 20 caracteres")
   private String password;
 
   @Column(nullable = false)
+  @NotNull(message = "O nome não pode ser nulo")
+  @Size(min = 2, max = 50, message = "O nome deve ter entre 2 e 50 caracteres")
   private String name;
 
   @Column(nullable = false)
+  @NotNull(message = "A função não pode ser nula")
+  @Pattern(regexp = "^(ADMIN|USER)$", message = "A função deve ser 'ADMIN' ou 'USER'")
   private String role;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -64,5 +74,13 @@ public class User {
 
   public void setRole(String role) {
     this.role = role;
+  }
+
+  public List<Application> getApplications() {
+    return this.applications;
+  }
+
+  public void setApplications(List<Application> applications) {
+    this.applications = applications;
   }
 }

@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
 
   private checkAuthentication(): Observable<boolean> {
     return this.authService.isAuthenticated().pipe(
-      map(isAuthenticated => this.handleAuthentication(isAuthenticated))
+      map(isAuthenticated => this.handleAuthentication(isAuthenticated as boolean))
     );
   }
 

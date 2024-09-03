@@ -1,18 +1,57 @@
-<div>
-  <h2>Criar Nova Vaga</h2>
-  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
-    <label for="title">Título</label>
-    <input id="title" formControlName="title">
-    <div *ngIf="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
-      Título é obrigatório.
-    </div>
+<div class="job-create-container">
+  <div class="job-create-form">
+    <h2>Criar Vaga</h2>
+    <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="title">Título</label>
+        <input id="title" type="text" formControlName="title" required>
+        <div *ngIf="jobForm.get('title')?.invalid && (jobForm.get('title')?.dirty || jobForm.get('title')?.touched)"
+          class="error-message">
+          <div *ngIf="jobForm.get('title')?.errors?.['required']">O título é obrigatório.</div>
+          <div *ngIf="jobForm.get('title')?.errors?.['minlength']">O título deve ter no mínimo 2 caracteres.</div>
+        </div>
+      </div>
 
-    <label for="description">Descrição</label>
-    <textarea id="description" formControlName="description"></textarea>
-    <div *ngIf="jobForm.get('description')?.invalid && jobForm.get('description')?.touched">
-      Descrição é obrigatória.
-    </div>
+      <div class="form-group">
+        <label for="description">Descrição</label>
+        <textarea id="description" formControlName="description" required></textarea>
+        <div
+          *ngIf="jobForm.get('description')?.invalid && (jobForm.get('description')?.dirty || jobForm.get('description')?.touched)"
+          class="error-message">
+          <div *ngIf="jobForm.get('description')?.errors?.['required']">A descrição é obrigatória.</div>
+          <div *ngIf="jobForm.get('description')?.errors?.['minlength']">A descrição deve ter no mínimo 10 caracteres.
+          </div>
+        </div>
+      </div>
 
-    <button type="submit" [disabled]="jobForm.invalid">Criar</button>
-  </form>
+      <div class="form-group">
+        <label for="location">Localização</label>
+        <input id="location" type="text" formControlName="location" required>
+        <div
+          *ngIf="jobForm.get('location')?.invalid && (jobForm.get('location')?.dirty || jobForm.get('location')?.touched)"
+          class="error-message">
+          <div *ngIf="jobForm.get('location')?.errors?.['required']">A localização é obrigatória.</div>
+          <div *ngIf="jobForm.get('location')?.errors?.['minlength']">A localização deve ter no mínimo 2 caracteres.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="company">Empresa</label>
+        <input id="company" type="text" formControlName="company" required>
+        <div
+          *ngIf="jobForm.get('company')?.invalid && (jobForm.get('company')?.dirty || jobForm.get('company')?.touched)"
+          class="error-message">
+          <div *ngIf="jobForm.get('company')?.errors?.['required']">A empresa é obrigatória.</div>
+          <div *ngIf="jobForm.get('company')?.errors?.['minlength']">A empresa deve ter no mínimo 2 caracteres.</div>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="jobForm.invalid">Criar Vaga</button>
+    </form>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
 </div>

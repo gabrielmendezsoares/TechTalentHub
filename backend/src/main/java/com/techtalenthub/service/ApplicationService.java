@@ -2,7 +2,6 @@ package com.techtalenthub.service;
 
 import com.techtalenthub.model.Application;
 import com.techtalenthub.repository.ApplicationRepository;
-import com.techtalenthub.dto.UpdateApplicationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,23 +43,22 @@ public class ApplicationService {
   /**
    * Salva uma nova aplicação.
    * 
-   * @param application a aplicação a ser salva
+   * @param newApplication a aplicação a ser salva
    * @return a aplicação salva
    */
-  public Application save(Application application) {
-    return applicationRepository.save(application);
+  public Application save(Application newApplication) {
+    return applicationRepository.save(newApplication);
   }
 
   /**
    * Atualiza uma aplicação existente.
    * 
-   * @param id o ID da aplicação a ser atualizada
-   * @param updateApplicationRequest os dados de atualização da aplicação
    * @param application a aplicação a ser atualizada
+   * @param newApplication os dados de atualização da aplicação
    * @return a aplicação atualizada
    */
-  public Application update(Long id, UpdateApplicationRequest updateApplicationRequest, Application application) {
-    application.setStatus(updateApplicationRequest.getStatus());
+  public Application update(Application application, Application newApplication) {
+    application.setStatus(newApplication.getStatus());
 
     return applicationRepository.save(application);
   }

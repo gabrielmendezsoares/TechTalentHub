@@ -1,16 +1,12 @@
 package com.techtalenthub.controller;
 
 import com.techtalenthub.model.Job;
-import com.techtalenthub.model.User;
-import com.techtalenthub.dto.UpdateApplicationRequest;
 import com.techtalenthub.service.JobService;
 import com.techtalenthub.exception.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,12 +17,10 @@ import java.util.Optional;
 public class JobController {
 
   private final JobService jobService;
-  private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public JobController(JobService jobService, PasswordEncoder passwordEncoder) {
+  public JobController(JobService jobService) {
     this.jobService = jobService;
-    this.passwordEncoder = passwordEncoder;
   }
 
   /**
@@ -37,7 +31,7 @@ public class JobController {
   @GetMapping
   public ResponseEntity<List<Job>> findAll() {
     List<Job> jobs = jobService.findAll();
-    
+
     return ResponseEntity.ok(jobs);
   }
 
@@ -48,78 +42,63 @@ public class JobController {
    * @return a vaga de emprego encontrada ou uma resposta de erro
    */
   @GetMapping("/{id}")
-  public ResponseEntity<?> findById(@PathVariable Long id) {
-    Optional<Job> job = jobService.findById(id);
-    
-    if (job.isPresent()) {
-      return ResponseEntity.ok(job.get());
+  public ResponseEntity<Job> findById(@PathVariable Long id) {
+    Optional<Job> optionalJob = jobService.findById(id);
+
+    if (optionalJob.isPresent()) {
+      return ResponseEntity.ok(optionalJob.get());
     } else {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job not found with id " + id);
+      throw new ResourceNotFoundException("Job not found with id " + id);
     }
   }
 
   /**
    * Cria uma nova vaga de emprego.
    * 
-   * @param job a vaga de emprego a ser criada
-   * @param request os dados da requisição
+   * @param newJob a vaga de emprego a ser criada
    * @return a vaga de emprego criada
    */
   @PostMapping
-  public ResponseEntity<?> create(@RequestBody Job job, @RequestBody UpdateApplicationRequest request) {
-    if ("admin".equals(request.getRole())) {
-      Job createdJob = jobService.save(job);
-      
-      return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
-    } else {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN)
-          .body("Forbidden: Invalid credentials or insufficient permissions");
-    }
+  public ResponseEntity<Job> create(@RequestBody Job newJob) {
+    Job createdJob = jobService.save(newJob);
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdJob);
   }
 
   /**
    * Atualiza uma vaga de emprego existente.
    * 
    * @param id o ID da vaga de emprego a ser atualizada
-   * @param job os dados de atualização da vaga de emprego
-   * @param request os dados da requisição
+   * @param newJob os dados de atualização da vaga de emprego
    * @return a vaga de emprego atualizada ou uma resposta de erro
    */
   @PutMapping("/{id}")
-  public ResponseEntity<Job> update(@PathVariable Long id, @RequestBody Job job, @RequestBody UpdateApplicationRequest request) {
-    if ("admin".equals(request.getRole())) {
-      Optional<Job> job = jobService.findById(id);
-      
-      if (job.isPresent()) {
-        Job updatedJob = jobService.update(id, job);
-        
-        return ResponseEntity.ok(updatedJob);
-      } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job not found with id " + id);
-      }
+  public ResponseEntity<Job> update(@PathVariable Long id, @RequestBody Job newJob) {
+    Optional<Job> optionalJob = jobService.findById(id);
+
+    if (!optionalJob.isPresent()) {
+      throw new ResourceNotFoundException("Job not found with id " + id);
+    }
+
+    Job updatedJob = jobService.update(optionalJob.get(), newJob);
+
+    return ResponseEntity.ok(updatedJob);
   }
 
   /**
    * Deleta uma vaga de emprego pelo ID.
    * 
    * @param id o ID da vaga de emprego a ser deletada
-   * @param request os dados da requisição
    * @return uma resposta de sucesso ou erro
    */
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> delete(@PathVariable Long id, @RequestBody UpdateApplicationRequest request) {
-    if ("admin".equals(request.getRole())) {
-      Optional<Job> job = jobService.findById(id);
-      
-      if (job.isPresent()) {
-        jobService.delete(id);
-        
-        return ResponseEntity.noContent().build();
-      } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job not found with id " + id);
-      }
-    } else {
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden: Invalid credentials or insufficient permissions"););
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    if (!jobService.existsById(id)) {
+      throw new ResourceNotFoundException("Job not found with id " + id);
     }
+
+    jobService.delete(id);
+
+    return ResponseEntity.noContent().build();
   }
 }
