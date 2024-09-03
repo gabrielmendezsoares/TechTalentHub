@@ -1,0 +1,45 @@
+<mat-sidenav-container class="app-container">
+  <mat-sidenav #sidenav mode="side" opened>
+    <mat-toolbar color="primary">MENU</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/jobs" (click)="sidenav.close()">Vagas</a>
+      <a mat-list-item routerLink="/job-create" (click)="sidenav.close()">Criar Vaga</a>
+      <a mat-list-item routerLink="/profile" (click)="sidenav.close()">Perfil</a>
+      <a mat-list-item routerLink="/login" (click)="sidenav.close()">Login</a>
+      <a mat-list-item routerLink="/register" (click)="sidenav.close()">Registrar</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <header class="app-header">
+      <mat-toolbar color="primary">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>
+            <ng-container>
+              <img src="../assets/menu-icon.png" alt="Menu Icon" style="width: 24px; height: 24px;">
+            </ng-container>
+          </mat-icon>
+        </button>
+        <span class="app-title">{{ title }}</span>
+        <span class="spacer"></span>
+        <nav class="app-nav">
+          <a mat-button routerLink="/job-list">Vagas</a>
+          <a mat-button routerLink="/job-create">Criar Vaga</a>
+          <a mat-button routerLink="/profile">Perfil</a>
+          <a mat-button routerLink="/login">Login</a>
+          <a mat-button routerLink="/register">Registrar</a>
+        </nav>
+      </mat-toolbar>
+    </header>
+
+    <main class="app-content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <footer class="app-footer">
+      <mat-toolbar color="accent">
+        <span>&copy; 2024 TechTalentHub</span>
+      </mat-toolbar>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

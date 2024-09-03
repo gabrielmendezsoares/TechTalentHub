@@ -1,0 +1,57 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  padding: 10px 20px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.app-nav a {
+  margin-left: 10px;
+  text-decoration: none;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.app-content {
+  margin-top: 64px; /* Altura do mat-toolbar */
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+}
+
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  text-align: center;
+}
