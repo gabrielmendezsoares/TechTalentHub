@@ -40,3 +40,27 @@ TechTalentHub é uma aplicação Spring Boot que serve como backend para um sist
 ### .env e .env.example
 
 O arquivo `.env` é comumente usado para armazenar variáveis de ambiente para sua aplicação. Ele permite que você defina pares de chave-valor que podem ser acessados dentro do seu código. O arquivo `env.example` serve como um modelo para o arquivo `.env`, fornecendo uma lista de variáveis de ambiente necessárias e seus valores padrão. É recomendado incluir o arquivo `env.example` no seu repositório para que outros desenvolvedores possam configurar facilmente seu ambiente copiando-o e preenchendo os valores reais no arquivo `.env`.
+
+5. Crie um usuário administrador:
+
+Para criar um usuário administrador, faça uma requisição POST para o endpoint /users com o seguinte payload:
+
+```
+{
+  "name": "admin",
+  "email": "admin@example.com",
+  "password": "admin123",
+  "role": "ADMIN"
+}
+```
+
+```
+curl -X POST http://localhost:8080/users -H "Content-Type: application/json" -d '{
+  "name": "admin",
+  "email": "admin@example.com",
+  "password": "admin123",
+  "role": "ADMIN"
+}'
+```
+
+
